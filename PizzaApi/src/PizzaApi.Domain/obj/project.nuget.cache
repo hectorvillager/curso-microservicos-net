@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "BBeMmuCbNPE=",
+  "dgSpecHash": "uJFxfmiZZNc=",
   "success": true,
   "projectFilePath": "/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Domain/PizzaApi.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/fluentvalidation/12.0.0/fluentvalidation.12.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

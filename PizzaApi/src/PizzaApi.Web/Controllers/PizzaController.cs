@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PizzaApi.Application.DTOs;
 using PizzaApi.Application.Services;
+using PizzaApi.Application.Validators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace PizzaApi.Web.Controllers
     public class PizzaController : ControllerBase
     {
         private readonly PizzaService _pizzaService;
+        private readonly PizzaDtoValidator _pizzaDtoValidator = new PizzaDtoValidator();
 
         public PizzaController(PizzaService pizzaService)
         {
@@ -38,6 +40,10 @@ namespace PizzaApi.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<PizzaDto>> CreatePizza(PizzaDto pizzaDto)
         {
+            var validationResult = _pizzaDtoValidator.Validate(pizzaDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var createdPizza = await _pizzaService.CreatePizzaAsync(pizzaDto);
             return CreatedAtAction(nameof(GetPizzaById), new { id = createdPizza.Id }, createdPizza);
         }
@@ -49,6 +55,10 @@ namespace PizzaApi.Web.Controllers
             {
                 return BadRequest();
             }
+
+            var validationResult = _pizzaDtoValidator.Validate(pizzaDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             await _pizzaService.UpdatePizzaAsync(id, pizzaDto);
             return NoContent();

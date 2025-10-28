@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "5Y1SzFDbtag=",
+  "dgSpecHash": "IezIFE055hU=",
   "success": true,
   "projectFilePath": "/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/PizzaApi.Infrastructure.csproj",
   "expectedPackageFiles": [
     "/home/codespace/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/home/codespace/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",
+    "/home/codespace/.nuget/packages/fluentvalidation/12.0.0/fluentvalidation.12.0.0.nupkg.sha512",
     "/home/codespace/.nuget/packages/microsoft.bcl.asyncinterfaces/1.1.1/microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "/home/codespace/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
     "/home/codespace/.nuget/packages/microsoft.data.sqlclient/5.1.6/microsoft.data.sqlclient.5.1.6.nupkg.sha512",

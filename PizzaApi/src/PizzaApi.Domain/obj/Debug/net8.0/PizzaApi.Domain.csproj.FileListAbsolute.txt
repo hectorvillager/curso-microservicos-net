@@ -10,3 +10,4 @@
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Domain/obj/Debug/net8.0/refint/PizzaApi.Domain.dll
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Domain/obj/Debug/net8.0/PizzaApi.Domain.pdb
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Domain/obj/Debug/net8.0/ref/PizzaApi.Domain.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Domain/obj/Debug/net8.0/PizzaApi.Domain.csproj.AssemblyReference.cache

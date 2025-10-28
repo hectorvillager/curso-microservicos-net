@@ -39,6 +39,15 @@
           "lib/netstandard2.0/Azure.Identity.dll": {}
         }
       },
+      "FluentValidation/12.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/FluentValidation.dll": {}
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "type": "package",
         "compile": {
@@ -829,6 +838,9 @@
       "PizzaApi.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "FluentValidation": "12.0.0"
+        },
         "compile": {
           "bin/placeholder/PizzaApi.Domain.dll": {}
         },
@@ -870,6 +882,20 @@
         "azure.identity.nuspec",
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll"
+      ]
+    },
+    "FluentValidation/12.0.0": {
+      "sha512": "8NVLxtMUXynRHJIX3Hn1ACovaqZIJASufXIIFkD0EUbcd5PmMsL1xUD5h548gCezJ5BzlITaR9CAMrGe29aWpA==",
+      "type": "package",
+      "path": "fluentvalidation/12.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "fluent-validation-icon.png",
+        "fluentvalidation.12.0.0.nupkg.sha512",
+        "fluentvalidation.nuspec",
+        "lib/net8.0/FluentValidation.dll"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {

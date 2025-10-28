@@ -92,3 +92,6 @@
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/obj/Debug/net8.0/PizzaApi.Web.pdb
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/obj/Debug/net8.0/PizzaApi.Web.genruntimeconfig.cache
 /workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/obj/Debug/net8.0/ref/PizzaApi.Web.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/bin/Debug/net8.0/FluentValidation.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/bin/Debug/net8.0/FluentValidation.AspNetCore.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Web/bin/Debug/net8.0/FluentValidation.DependencyInjectionExtensions.dll
