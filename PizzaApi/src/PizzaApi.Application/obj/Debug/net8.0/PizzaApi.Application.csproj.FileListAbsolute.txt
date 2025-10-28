@@ -1,0 +1,16 @@
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/bin/Debug/net8.0/PizzaApi.Application.deps.json
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/bin/Debug/net8.0/PizzaApi.Application.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/bin/Debug/net8.0/PizzaApi.Application.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/bin/Debug/net8.0/PizzaApi.Domain.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/bin/Debug/net8.0/PizzaApi.Domain.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.csproj.AssemblyReference.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.AssemblyInfoInputs.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.AssemblyInfo.cs
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.csproj.CoreCompileInputs.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.sourcelink.json
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.6D00E894.Up2Date
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/refint/PizzaApi.Application.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/PizzaApi.Application.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Application/obj/Debug/net8.0/ref/PizzaApi.Application.dll

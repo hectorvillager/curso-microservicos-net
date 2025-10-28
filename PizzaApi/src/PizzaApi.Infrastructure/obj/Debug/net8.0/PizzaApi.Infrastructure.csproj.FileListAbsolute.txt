@@ -1,0 +1,16 @@
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/bin/Debug/net8.0/PizzaApi.Infrastructure.deps.json
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/bin/Debug/net8.0/PizzaApi.Infrastructure.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/bin/Debug/net8.0/PizzaApi.Infrastructure.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/bin/Debug/net8.0/PizzaApi.Domain.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/bin/Debug/net8.0/PizzaApi.Domain.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.csproj.AssemblyReference.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.AssemblyInfoInputs.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.AssemblyInfo.cs
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.csproj.CoreCompileInputs.cache
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.sourcelink.json
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.80DC55BC.Up2Date
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/refint/PizzaApi.Infrastructure.dll
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/PizzaApi.Infrastructure.pdb
+/workspaces/curso-microservicos-net/PizzaApi/src/PizzaApi.Infrastructure/obj/Debug/net8.0/ref/PizzaApi.Infrastructure.dll
