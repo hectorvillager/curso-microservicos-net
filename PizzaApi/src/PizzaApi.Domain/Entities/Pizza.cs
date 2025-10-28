@@ -18,7 +18,7 @@ namespace PizzaApi.Domain.Entities
             Ingredients = ingredients ?? new List<Ingredient>();
         }
 
-        // Additional methods for business logic can be added here
+        // Métodos de negocio para agregar ingredientes, etc.
     }
 
     public class Ingredient
@@ -26,10 +26,16 @@ namespace PizzaApi.Domain.Entities
         public string Name { get; private set; }
         public decimal Quantity { get; private set; }
 
-        public Ingredient(string name, decimal quantity)
+        protected Ingredient(string name, decimal quantity)
         {
             Name = name;
             Quantity = quantity;
+        }
+
+        // Puedes agregar un método estático para crear ingredientes si lo necesitas
+        public static Ingredient Create(string name, decimal quantity)
+        {
+            return new Ingredient(name, quantity);
         }
     }
 }
