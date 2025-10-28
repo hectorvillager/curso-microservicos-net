@@ -118,10 +118,60 @@ namespace PizzaApi.Application.Services
             return pizza?.Ingredients ?? new List<Ingredient>();
         }
 
-        // Mapping methods (not implemented here)
-        private IEnumerable<PizzaDto> MapToPizzaDtos(IEnumerable<Pizza> pizzas) => throw new System.NotImplementedException();
-        private PizzaDto MapToPizzaDto(Pizza pizza) => throw new System.NotImplementedException();
-        private Pizza MapToPizza(PizzaDto pizzaDto) => throw new System.NotImplementedException();
-        private void UpdatePizzaFromDto(Pizza pizza, PizzaDto pizzaDto) => throw new System.NotImplementedException();
+        private IEnumerable<PizzaDto> MapToPizzaDtos(IEnumerable<Pizza> pizzas)
+        {
+            var dtos = new List<PizzaDto>();
+            foreach (var pizza in pizzas)
+            {
+                dtos.Add(MapToPizzaDto(pizza));
+            }
+            return dtos;
+        }
+
+        private PizzaDto MapToPizzaDto(Pizza pizza)
+        {
+            if (pizza == null) return null;
+            return new PizzaDto
+            {
+                Id = pizza.Id,
+                Name = pizza.Name,
+                Description = pizza.Description,
+                Url = pizza.Url,
+                Price = pizza.Price,
+                Size = null // Si tienes un atributo Size en Pizza, asígnalo aquí
+                // Puedes agregar Ingredients si tu DTO lo necesita
+            };
+        }
+
+        private Pizza MapToPizza(PizzaDto pizzaDto)
+        {
+            if (pizzaDto == null) return null;
+            // Si tienes Ingredients en el DTO, mapea aquí
+            return new Pizza(
+                pizzaDto.Name,
+                pizzaDto.Description,
+                pizzaDto.Url,
+                pizzaDto.Price,
+                new List<Ingredient>() // Puedes mapear ingredientes si el DTO los tiene
+            );
+        }
+
+        private void UpdatePizzaFromDto(Pizza pizza, PizzaDto pizzaDto)
+        {
+            if (pizza == null || pizzaDto == null) return;
+            // Si tus propiedades tienen setters privados, puedes usar métodos internos o reflejar la lógica aquí
+            // Ejemplo usando métodos internos (deberías tenerlos en la entidad Pizza)
+            // pizza.UpdateName(pizzaDto.Name);
+            // pizza.UpdateDescription(pizzaDto.Description);
+            // pizza.UpdateUrl(pizzaDto.Url);
+            // pizza.UpdatePrice(pizzaDto.Price);
+
+            // Si tienes setters públicos, puedes hacer:
+            // pizza.Name = pizzaDto.Name;
+            // pizza.Description = pizzaDto.Description;
+            // pizza.Url = pizzaDto.Url;
+            // pizza.Price = pizzaDto.Price;
+            // Actualiza ingredientes si lo necesitas
+        }        
     }
 }
