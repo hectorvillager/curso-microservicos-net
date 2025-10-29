@@ -1,13 +1,45 @@
+using webapi.common.dependencyinjection;
+using webapi.common;
+using FluentValidation;
+using webapi.infrastructure;
 using Microsoft.EntityFrameworkCore;
-using webapi.Data;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar el DbContext con In-Memory Database
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type =>
+    {
+        if (type.DeclaringType != null)
+        {
+
+            return $"{type.DeclaringType.Name}.{type.Name}";
+        }
+        return type.FullName?.Replace("+", ".").Replace(".", "") ?? type.Name;
+    });
+    
+    options.MapType<decimal>(() => new OpenApiSchema 
+    { 
+        Type = "number", 
+        Format = "decimal"
+    });
+    
+    options.MapType<decimal?>(() => new OpenApiSchema 
+    { 
+        Type = "number", 
+        Format = "decimal",
+        Nullable = true
+    });
+});
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseInMemoryDatabase("PizzaDb");
-    
     if (builder.Environment.IsDevelopment())
     {
         options.EnableSensitiveDataLogging();
@@ -15,12 +47,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     }
 });
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddInjectables();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,7 +59,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+
+app.MapFeatures();
+
+
 
 app.Run();
+
+record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
