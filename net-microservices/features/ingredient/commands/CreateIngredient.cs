@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.common;
+using webapi.common.infrastructure;
 using webapi.common.dependencyinjection;
+using webapi.features.pizza.domain;
+using webapi.infrastructure; 
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace webapi.features.ingredient.commands;
 
@@ -41,14 +46,40 @@ public class CreateIngredient : IFeatureModule
     [Injectable]
     public class Service : IService
     {
-        public Task<Response> Handler(Request request)
+        private readonly IAdd<Ingredient> _repository;
+        public Service(IAdd<Ingredient> repository)
         {
+            _repository = repository;
+        }
+
+        public async Task<Response> Handler(Request request)
+        {
+            var id = Guid.NewGuid();
+            var ingredient = Ingredient.Create(id, request.Name, request.Cost);
+            await _repository.AddAsync(ingredient, CancellationToken.None);
+
             var response = new Response(
-                Guid.NewGuid(),
-                request.Name,
-                request.Cost
+                id,
+                ingredient.Name,
+                ingredient.Cost
             );
-            return Task.FromResult(response);
+            return response;
+        }
+    }
+
+    [Injectable]
+    public class Repository : IAdd<Ingredient>
+    {
+        private readonly ApplicationDbContext _context;
+        public Repository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task AddAsync(Ingredient entity, CancellationToken cancellationToken)
+        {
+            await _context.AddAsync(entity);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
