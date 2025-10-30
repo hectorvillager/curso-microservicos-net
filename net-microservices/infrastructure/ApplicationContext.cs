@@ -1,32 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using webapi.common.dependencyinjection;
+using webapi.common.domain;
 using webapi.common.infrastructure;
 using webapi.features.pizza.domain;
 namespace webapi.infrastructure;
 
 [Injectable]
-public class ApplicationDbContext : DbContext, IGetOrThrowAsync, IGetOrThrowAsyncNoTracking
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IGetOrThrowAsync
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Pizza> Pizzas { get; set; }
     public DbSet<Ingredient> Ingredients { get; set; }
 
-    public async Task<T> GetOrThrowAsync<T, ID>(ID id, CancellationToken cancellationToken = default) where T : class
+    public async Task<T> GetOrThrowAsync<T, ID>(ID id, CancellationToken cancellationToken = default, bool tracking = true) where T : Entity
     {
-        var entity = await Set<T>().FindAsync([id!], cancellationToken);
-        return entity ?? throw new KeyNotFoundException($"{typeof(T).Name} with ID '{id}' not found.");
-    }
+        var query = Set<T>().AsQueryable();
 
-    public async Task<T> GetOrThrowAsyncNoTracking<T, ID>(ID id, CancellationToken cancellationToken = default) where T : class
-    {
-        var entity = await Set<T>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(e => EF.Property<ID>(e, "Id").Equals(id), cancellationToken);
-
+        if (!tracking)
+        {
+            query = query.AsNoTracking();
+        }
+        var entity = await query.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync(cancellationToken);
         return entity ?? throw new KeyNotFoundException($"{typeof(T).Name} with ID '{id}' not found.");
     }
 

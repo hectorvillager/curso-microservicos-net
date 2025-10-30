@@ -48,7 +48,7 @@ public class UpdateIngredient : IFeatureModule
             
             ingredient.Update(request.Name, request.Cost);
             
-            _repository.UpdateAsync(id, ingredient);
+            _repository.UpdateAsync(ingredient);
         }
     }
     
@@ -62,7 +62,7 @@ public class UpdateIngredient : IFeatureModule
             return await _context.GetOrThrowAsync<Ingredient, Guid>(id, cancellationToken);
         }
 
-        public void UpdateAsync(Guid id, Ingredient entity, CancellationToken cancellationToken = default)
+        public void UpdateAsync(Ingredient entity, CancellationToken cancellationToken = default)
         {
             _context.Update(entity);
             _context.SaveChangesAsync(cancellationToken);

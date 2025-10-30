@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using webapi.common;
 using webapi.common.dependencyinjection;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +9,7 @@ namespace webapi.features.ingredient.commands;
 
 public class GetIngredients : IFeatureModule
 {
+    public record Query(string? Name, int Page=1, int Size=25);
 
     public record struct Response(
         [Required][property: Required] Guid Id,
@@ -19,9 +19,9 @@ public class GetIngredients : IFeatureModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/ingredientes", async (IService service) =>
+        app.MapGet("/ingredientes", async (IService service, [AsParameters] Query query) =>
         {
-            var response = await service.Handler();
+            var response = await service.Handler(query);
             return Results.Ok(response);
         })
         .WithOpenApi()
@@ -34,7 +34,7 @@ public class GetIngredients : IFeatureModule
 
     public interface IService
     {
-        Task<IEnumerable<Response>> Handler();
+        Task<IEnumerable<Response>> Handler(Query query);
     }
 
     [Injectable]
@@ -42,18 +42,21 @@ public class GetIngredients : IFeatureModule
     {
         private readonly IQuery _repository = repository;
 
-        public async Task<IEnumerable<Response>> Handler()
+        public async Task<IEnumerable<Response>> Handler(Query query)
         {
 
             var ingredients = await _repository.GetAll();
 
-            return ingredients.Select(ingredient => new Response
+            return ingredients
+            .Where(i => (query.Name == null || i.Name.Contains(query.Name, StringComparison.OrdinalIgnoreCase)))
+            .Select(ingredient => new Response
             {
-
                 Id = ingredient.Id,
                 Name = ingredient.Name,
                 Cost = ingredient.Cost
-            });
+            })
+            .Skip((query.Page - 1) * query.Size)
+            .Take(query.Size);
 
         }
     }
