@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.common;
-using webapi.common.infrastructure;
 using webapi.common.dependencyinjection;
+using System.ComponentModel.DataAnnotations;
 using webapi.features.pizza.domain;
 using webapi.infrastructure;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace webapi.features.ingredient.queries;
+namespace webapi.features.ingredient.commands;
 
 public class GetIngredients : IFeatureModule
 {
+
     public record struct Response(
         [Required][property: Required] Guid Id,
         [Required][property: Required] string Name,
@@ -25,53 +25,54 @@ public class GetIngredients : IFeatureModule
             return Results.Ok(response);
         })
         .WithOpenApi()
-        .WithName("GetAllIngredients")
-        .WithSummary("Obtener todos los ingredientes")
-        .WithDescription("Endpoint para obtener la lista de todos los ingredientes")
+        .WithName("GetIngredients")
+        .WithSummary("Recupera ingredientes")
+        .WithDescription("Endpoint para recueperar ingredientes")
         .WithTags("Ingredientes")
-        .Produces<Response[]>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .Produces<List<Response>>(StatusCodes.Status200OK);
     }
 
     public interface IService
     {
-        Task<Response[]> Handler();
+        Task<IEnumerable<Response>> Handler();
     }
 
     [Injectable]
-    public class Service : IService
+    public class Service(IQuery repository) : IService
     {
-        private readonly IReadAll<Ingredient> _repository;
-        public Service(IReadAll<Ingredient> repository)
-        {
-            _repository = repository;
-        }
+        private readonly IQuery _repository = repository;
 
-        public async Task<Response[]> Handler()
+        public async Task<IEnumerable<Response>> Handler()
         {
-            var ingredients = await _repository.GetAllAsync();
-            return ingredients.Select(i => new Response(i.Id, i.Name, i.Cost)).ToArray();
+
+            var ingredients = await _repository.GetAll();
+
+            return ingredients.Select(ingredient => new Response
+            {
+
+                Id = ingredient.Id,
+                Name = ingredient.Name,
+                Cost = ingredient.Cost
+            });
+
         }
     }
+
+    public interface IQuery
+    {
+        Task<IQueryable<Ingredient>> GetAll();
+    }
+
 
     [Injectable]
-    public class Repository : IReadAll<Ingredient>
+    public class Repository(ApplicationDbContext context) : IQuery
     {
-        private readonly ApplicationDbContext _context;
-        public Repository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
-        public async Task<IEnumerable<Ingredient>> GetAllAsync()
+
+        public Task<IQueryable<Ingredient>> GetAll()
         {
-            return await _context.Ingredients.ToListAsync();
+            return Task.FromResult(_context.Ingredients.AsNoTracking());
         }
     }
-}
-
-// filepath: src/webapi/common/infrastructure/IReadAll.cs
-public interface IReadAll<T>
-{
-    Task<IEnumerable<T>> GetAllAsync();
 }

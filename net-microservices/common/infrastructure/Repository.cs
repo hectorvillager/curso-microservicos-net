@@ -5,30 +5,24 @@ public interface IAdd<in T>
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 }
 
-public interface IGet<T, in ID>{
-    Task<T?> GetAsync(ID id, CancellationToken cancellationToken = default);   
+public interface IGet<T, in ID>
+{
+    Task<T> GetAsync(ID id, CancellationToken cancellationToken = default);
 }
 
-public interface IUpdate<T, in ID> 
+public interface IUpdate<T, in ID> : IGet<T, ID>
 {
-    Task UpdateAsync(ID id,T entity, CancellationToken cancellationToken = default);
+    void UpdateAsync(ID id, T entity, CancellationToken cancellationToken = default);
 }
 
-public interface IRemove<in ID> 
+public interface IRemove<T, in ID> : IGet<T, ID>
 {
-    Task RemoveAsync(ID id, CancellationToken cancellationToken = default);
+    void RemoveAsync(T entity, CancellationToken cancellationToken = default);
 }
 
-/*
-public static class RepositoryExtensions
+public interface IGetOrThrowAsync
 {
-    public static async Task<T> GetOrThrowAsync<T, ID>(
-        this DbContext context,
-        ID id,
-        CancellationToken cancellationToken = default) where T : class
-    {
-        var entity = await context.Set<T>().FindAsync(new object[] { id! }, cancellationToken);
-        return entity ?? throw new KeyNotFoundException($"Entity with ID '{id}' not found.");
-    }
+    Task<T> GetOrThrowAsync<T, ID>(ID id,
+        CancellationToken cancellationToken = default) where T : class;
 }
-*/
+

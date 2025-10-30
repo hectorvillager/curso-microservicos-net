@@ -24,10 +24,10 @@ public static class ServiceCollectionExtensions
         {
             var attribute = implementationType.GetCustomAttribute<InjectableAttribute>()!;
             
-            // Obtener todas las interfaces incluyendo las heredadas
-            var allInterfaces = GetAllInterfaces(implementationType);
+            // Obtener solo las interfaces de primer nivel
+            var topLevelInterfaces = GetTopLevelInterfaces(implementationType);
             
-            foreach (var interfaceType in allInterfaces)
+            foreach (var interfaceType in topLevelInterfaces)
             {
                 // Verificar si ya está registrado
                 if (!IsServiceRegistered(services, interfaceType))
@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
             }
             
             // Si no tiene interfaces, registrar la clase misma
-            if (allInterfaces.Count == 0 && !IsServiceRegistered(services, implementationType))
+            if (topLevelInterfaces.Count == 0 && !IsServiceRegistered(services, implementationType))
             {
                 RegisterService(services, implementationType, implementationType, attribute.Lifetime);
             }
@@ -46,23 +46,25 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    private static HashSet<Type> GetAllInterfaces(Type type)
+    private static HashSet<Type> GetTopLevelInterfaces(Type type)
     {
-        var interfaces = new HashSet<Type>();
+        var allInterfaces = type.GetInterfaces();
+        var topLevelInterfaces = new HashSet<Type>();
         
-        foreach (var interfaceType in type.GetInterfaces())
+        foreach (var interfaceType in allInterfaces)
         {
-            // Agregar la interfaz actual
-            interfaces.Add(interfaceType);
+            // Verificar si esta interfaz es heredada por alguna otra interfaz que la clase implementa
+            bool isInheritedByOther = allInterfaces.Any(other => 
+                other != interfaceType && other.GetInterfaces().Contains(interfaceType));
             
-            // Agregar todas las interfaces padre recursivamente
-            foreach (var parentInterface in interfaceType.GetInterfaces())
+            // Si no es heredada por otra, es de primer nivel
+            if (!isInheritedByOther)
             {
-                interfaces.Add(parentInterface);
+                topLevelInterfaces.Add(interfaceType);
             }
         }
         
-        return interfaces;
+        return topLevelInterfaces;
     }
 
     private static bool IsServiceRegistered(IServiceCollection services, Type serviceType)

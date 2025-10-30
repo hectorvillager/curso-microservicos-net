@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.common;
-using webapi.common.infrastructure;
 using webapi.common.dependencyinjection;
-using webapi.features.pizza.domain;
-using webapi.infrastructure; 
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
+using webapi.common.infrastructure;
+using webapi.features.pizza.domain;
+using webapi.infrastructure;
 
 namespace webapi.features.ingredient.commands;
 
@@ -35,7 +33,7 @@ public class CreateIngredient : IFeatureModule
         .WithDescription("Endpoint para crear un nuevo ingrediente con su nombre y costo")
         .WithTags("Ingredientes")
         .Produces<Response>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest); // Opcional: para errores
+        .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
     public interface IService
@@ -44,41 +42,30 @@ public class CreateIngredient : IFeatureModule
     }
 
     [Injectable]
-    public class Service : IService
+    public class Service(IAdd<Ingredient> repository) : IService
     {
-        private readonly IAdd<Ingredient> _repository;
-        public Service(IAdd<Ingredient> repository)
-        {
-            _repository = repository;
-        }
+        private readonly IAdd<Ingredient> _repository = repository;
 
         public async Task<Response> Handler(Request request)
         {
-            var id = Guid.NewGuid();
-            var ingredient = Ingredient.Create(id, request.Name, request.Cost);
-            await _repository.AddAsync(ingredient, CancellationToken.None);
+            var ingredient = Ingredient.Create(Guid.NewGuid(), request.Name, request.Cost);
 
-            var response = new Response(
-                id,
-                ingredient.Name,
-                ingredient.Cost
-            );
+            await _repository.AddAsync(ingredient);
+
+            var response = new Response(ingredient.Id, ingredient.Name, ingredient.Cost);
+            
             return response;
         }
     }
-
+    
     [Injectable]
-    public class Repository : IAdd<Ingredient>
+    public class Repository(ApplicationDbContext context) : IAdd<Ingredient>
     {
-        private readonly ApplicationDbContext _context;
-        public Repository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
-        public async Task AddAsync(Ingredient entity, CancellationToken cancellationToken)
+        public async Task AddAsync(Ingredient entity, CancellationToken cancellationToken = default)
         {
-            await _context.AddAsync(entity);
+            await _context.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

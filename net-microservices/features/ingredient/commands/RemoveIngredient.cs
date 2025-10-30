@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
 using webapi.common;
-using webapi.common.infrastructure;
 using webapi.common.dependencyinjection;
+using webapi.common.infrastructure;
 using webapi.features.pizza.domain;
 using webapi.infrastructure;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace webapi.features.ingredient.commands;
 
@@ -15,13 +12,13 @@ public class RemoveIngredient : IFeatureModule
     {
         app.MapDelete("/ingredientes/{id:guid}", async (IService service, Guid id) =>
         {
-            var success = await service.Handler(id);
-            return success ? Results.NoContent() : Results.NotFound();
-        })
+            await service.Handler(id);
+            return Results.NoContent();
+        })        
         .WithOpenApi()
         .WithName("RemoveIngredient")
-        .WithSummary("Eliminar un ingrediente por Id")
-        .WithDescription("Endpoint para eliminar un ingrediente específico por su identificador")
+        .WithSummary("Eliminar un ingrediente")
+        .WithDescription("Endpoint para eliminar un ingrediente por su ID")
         .WithTags("Ingredientes")
         .Produces(StatusCodes.Status204NoContent)
         .ProducesProblem(StatusCodes.Status404NotFound);
@@ -29,46 +26,36 @@ public class RemoveIngredient : IFeatureModule
 
     public interface IService
     {
-        Task<bool> Handler(Guid id);
+        Task Handler(Guid id);
     }
 
     [Injectable]
-    public class Service : IService
+    public class Service(IRemove<Ingredient, Guid> repository) : IService
     {
-        private readonly IRemove<Ingredient> _repository;
-        public Service(IRemove<Ingredient> repository)
-        {
-            _repository = repository;
-        }
+        private readonly IRemove<Ingredient, Guid> _repository = repository;
 
-        public async Task<bool> Handler(Guid id)
+        public async Task Handler(Guid id)
         {
-            return await _repository.RemoveAsync(id);
+            var ingredient = await _repository.GetAsync(id);
+            
+            _repository.RemoveAsync(ingredient);
         }
     }
-
+    
     [Injectable]
-    public class Repository : IRemove<Ingredient>
+    public class Repository(ApplicationDbContext context) : IRemove<Ingredient, Guid>
     {
-        private readonly ApplicationDbContext _context;
-        public Repository(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context = context;
+
+        public async Task<Ingredient> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            _context = context;
+            return await _context.GetOrThrowAsync<Ingredient, Guid>(id, cancellationToken);
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public void RemoveAsync(Ingredient entity, CancellationToken cancellationToken = default)
         {
-            var ingredient = await _context.Ingredients.FindAsync(id);
-            if (ingredient is null) return false;
-            _context.Ingredients.Remove(ingredient);
-            await _context.SaveChangesAsync();
-            return true;
+            _context.Remove(entity);
+            _context.SaveChangesAsync(cancellationToken);
         }
     }
-}
-
-// filepath: src/webapi/common/infrastructure/IRemove.cs
-public interface IRemove<T>
-{
-    Task<bool> RemoveAsync(Guid id);
 }

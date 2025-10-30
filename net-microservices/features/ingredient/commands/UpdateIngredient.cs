@@ -1,23 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.common;
-using webapi.common.infrastructure;
 using webapi.common.dependencyinjection;
+using System.ComponentModel.DataAnnotations;
+using webapi.common.infrastructure;
 using webapi.features.pizza.domain;
 using webapi.infrastructure;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace webapi.features.ingredient.commands;
 
 public class UpdateIngredient : IFeatureModule
 {
     public record struct Request(
-        [Required][property: Required] Guid Id,
-        [Required][property: Required] string Name,
-        [Required][property: Required] decimal Cost
-    );
-    public record struct Response(
-        [Required][property: Required] Guid Id,
         [Required][property: Required] string Name,
         [Required][property: Required] decimal Cost
     );
@@ -26,63 +19,53 @@ public class UpdateIngredient : IFeatureModule
     {
         app.MapPut("/ingredientes/{id:guid}", async (IService service, Guid id, [FromBody] Request request) =>
         {
-            var response = await service.Handler(id, request);
-            return response is not null ? Results.Ok(response) : Results.NotFound();
-        })
+            await service.Handler(id, request);
+            return Results.NoContent();
+        })        
         .WithOpenApi()
         .WithName("UpdateIngredient")
-        .WithSummary("Actualizar un ingrediente por Id")
-        .WithDescription("Endpoint para actualizar un ingrediente específico por su identificador")
+        .WithSummary("Actualizar un ingrediente existente")
+        .WithDescription("Endpoint para actualizar el nombre y costo de un ingrediente")
         .WithTags("Ingredientes")
-        .Produces<Response>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .Produces(StatusCodes.Status204NoContent)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
     public interface IService
     {
-        Task<Response?> Handler(Guid id, Request request);
+        Task Handler(Guid id, Request request);
     }
 
     [Injectable]
-    public class Service : IService
+    public class Service(IUpdate<Ingredient, Guid> repository) : IService
     {
-        private readonly IUpdate<Ingredient> _repository;
-        public Service(IUpdate<Ingredient> repository)
-        {
-            _repository = repository;
-        }
+        private readonly IUpdate<Ingredient, Guid> _repository = repository;
 
-        public async Task<Response?> Handler(Guid id, Request request)
+        public async Task Handler(Guid id, Request request)
         {
-            var ingredient = await _repository.UpdateAsync(id, request.Name, request.Cost);
-            return ingredient is not null
-                ? new Response(ingredient.Id, ingredient.Name, ingredient.Cost)
-                : null;
+            var ingredient = await _repository.GetAsync(id);
+            
+            ingredient.Update(request.Name, request.Cost);
+            
+            _repository.UpdateAsync(id, ingredient);
         }
     }
-
+    
     [Injectable]
-    public class Repository : IUpdate<Ingredient>
+    public class Repository(ApplicationDbContext context) : IUpdate<Ingredient, Guid>
     {
-        private readonly ApplicationDbContext _context;
-        public Repository(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context = context;
+
+        public async Task<Ingredient> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            _context = context;
+            return await _context.GetOrThrowAsync<Ingredient, Guid>(id, cancellationToken);
         }
 
-        public async Task<Ingredient?> UpdateAsync(Guid id, string name, decimal cost)
+        public void UpdateAsync(Guid id, Ingredient entity, CancellationToken cancellationToken = default)
         {
-            var ingredient = await _context.Ingredients.FindAsync(id);
-            if (ingredient is null) return null;
-            ingredient.Update(name, cost); // Usa el método de tu entidad para validar y actualizar
-            await _context.SaveChangesAsync();
-            return ingredient;
+            _context.Update(entity);
+            _context.SaveChangesAsync(cancellationToken);
         }
     }
-}
-
-// filepath: src/webapi/common/infrastructure/IUpdate.cs
-public interface IUpdate<T>
-{
-    Task<T?> UpdateAsync(Guid id, string name, decimal cost);
 }
