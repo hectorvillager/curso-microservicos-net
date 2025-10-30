@@ -5,7 +5,7 @@ using webapi.features.pizza.domain;
 namespace webapi.infrastructure;
 
 [Injectable]
-public class ApplicationDbContext : DbContext, IGetOrThrowAsync
+public class ApplicationDbContext : DbContext, IGetOrThrowAsync, IGetOrThrowAsyncNoTracking
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -18,6 +18,15 @@ public class ApplicationDbContext : DbContext, IGetOrThrowAsync
     public async Task<T> GetOrThrowAsync<T, ID>(ID id, CancellationToken cancellationToken = default) where T : class
     {
         var entity = await Set<T>().FindAsync([id!], cancellationToken);
+        return entity ?? throw new KeyNotFoundException($"{typeof(T).Name} with ID '{id}' not found.");
+    }
+
+    public async Task<T> GetOrThrowAsyncNoTracking<T, ID>(ID id, CancellationToken cancellationToken = default) where T : class
+    {
+        var entity = await Set<T>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => EF.Property<ID>(e, "Id").Equals(id), cancellationToken);
+
         return entity ?? throw new KeyNotFoundException($"{typeof(T).Name} with ID '{id}' not found.");
     }
 
