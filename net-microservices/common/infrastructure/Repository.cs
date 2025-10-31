@@ -14,12 +14,12 @@ public interface IGet<T, in ID>
 
 public interface IUpdate<T, in ID> : IGet<T, ID>
 {
-    void UpdateAsync(T entity, CancellationToken cancellationToken = default);
+    Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
 }
 
 public interface IRemove<T, in ID> : IGet<T, ID>
 {
-    void RemoveAsync(T entity, CancellationToken cancellationToken = default);
+    Task RemoveAsync(T entity, CancellationToken cancellationToken = default);
 }
 
 public interface IGetOrThrowAsync

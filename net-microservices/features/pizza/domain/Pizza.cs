@@ -200,6 +200,7 @@ public class PizzaValidator : AbstractValidator<(string Name, string Description
     {
         RuleFor(x => x.Name)
             .NotEmpty()
+            .WithName("Name")
             .WithMessage("El nombre de la pizza es requerido.")
             .MinimumLength(3)
             .WithMessage("El nombre debe tener al menos 3 caracteres.")
@@ -208,6 +209,7 @@ public class PizzaValidator : AbstractValidator<(string Name, string Description
 
         RuleFor(x => x.Description)
             .NotEmpty()
+            .WithName("Description")
             .WithMessage("La descripción de la pizza es requerida.")
             .MinimumLength(10)
             .WithMessage("La descripción debe tener al menos 10 caracteres.")
@@ -216,6 +218,7 @@ public class PizzaValidator : AbstractValidator<(string Name, string Description
 
         RuleFor(x => x.Url)
             .NotEmpty()
+            .WithName("Url")
             .WithMessage("La URL de la imagen es requerida.")
             .Must(BeAValidUrl)
             .WithMessage("La URL no tiene un formato válido. Debe ser una URL HTTP o HTTPS.");

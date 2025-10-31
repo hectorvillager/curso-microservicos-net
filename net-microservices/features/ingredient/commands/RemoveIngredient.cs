@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using webapi.common;
 using webapi.common.dependencyinjection;
 using webapi.common.infrastructure;
@@ -36,9 +37,9 @@ public class RemoveIngredient : IFeatureModule
 
         public async Task Handler(Guid id)
         {
-            var ingredient = await _repository.GetAsync(id);
+            //var ingredient = await _repository.GetAsync(id);
             
-            _repository.RemoveAsync(ingredient);
+            await _repository.RemoveAsync(new Ingredient(id));
         }
     }
     
@@ -52,10 +53,17 @@ public class RemoveIngredient : IFeatureModule
             return await _context.GetOrThrowAsync<Ingredient, Guid>(id, cancellationToken);
         }
 
-        public void RemoveAsync(Ingredient entity, CancellationToken cancellationToken = default)
+        public async Task RemoveAsync(Ingredient entity, CancellationToken cancellationToken = default)
         {
-            _context.Remove(entity);
-            _context.SaveChangesAsync(cancellationToken);
+            //_context.Remove(entity);
+            _context.Attach(entity);
+            _context.Remove(entity);            
+            
+            //_context.Entry(entity).State = EntityState.Deleted;
+            //await _context.Ingredients.Where(i => i.Id.Equals(entity.Id)).ExecuteDeleteAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
+
+       
     }
 }

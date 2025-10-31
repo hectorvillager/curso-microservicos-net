@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # Servicio: Web API
+  # ============================================
+  webapi:
+    # Configuración de build
+    build:
+      context: .              # Directorio actual
+      dockerfile: Dockerfile  # Archivo Dockerfile a usar
+    
+    # Nombre del contenedor
+    container_name: webapi-container
+    
+    # Mapeo de puertos (host:container)
+    ports:
+      - "5000:8080"          # http://localhost:5000
+      - "5001:8081"          # https://localhost:5001 (opcional)
+    
+    # Variables de entorno
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_HTTP_PORTS=8080
+    
+    # Red para comunicación entre servicios
+    networks:
+      - webapi-network
+    
+    # Política de reinicio
+    restart: unless-stopped
+    
+    # Health check (opcional)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# ============================================
+# Redes
+# ============================================
+networks:
+  webapi-network:
+    driver: bridge

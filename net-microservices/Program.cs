@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using webapi.common.openapi;
 using Microsoft.AspNetCore.Mvc;
+using webapi.common.infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     }
 });
 
+//builder.Services.AddScoped<IGetOrThrowAsync>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
 
 builder.Services.AddProblemDetails(options =>
 {
@@ -94,7 +97,7 @@ builder.Services.AddProblemDetails(options =>
         context.ProblemDetails.Extensions["timestamp"] = DateTime.UtcNow;
     };
 });
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddInjectables();
 
 var app = builder.Build();

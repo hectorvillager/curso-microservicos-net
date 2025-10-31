@@ -90,6 +90,10 @@ public class Ingredient : Entity
     public string Name { get; protected set; } = string.Empty;
     public decimal Cost { get; protected set; }
 
+    public Ingredient(Guid id) : base(id)
+    {
+        
+    }
     protected Ingredient(Guid id, string name, decimal cost) : base(id)
     {
         ValidateAndSet(name, cost);
@@ -123,6 +127,7 @@ public class IngredientValidator : AbstractValidator<(string Name, decimal Cost)
     {
         RuleFor(x => x.Name)
             .NotEmpty()
+            .WithName("Name")
             .WithMessage("El nombre del ingrediente es requerido.")
             .MinimumLength(2)
             .WithMessage("El nombre debe tener al menos 2 caracteres.")
@@ -131,6 +136,7 @@ public class IngredientValidator : AbstractValidator<(string Name, decimal Cost)
 
         RuleFor(x => x.Cost)
             .GreaterThan(0)
+            .WithName("Cost")
             .WithMessage("El costo del ingrediente debe ser mayor a cero.")
             .LessThanOrEqualTo(10000)
             .WithMessage("El costo del ingrediente no puede exceder los 10,000.");

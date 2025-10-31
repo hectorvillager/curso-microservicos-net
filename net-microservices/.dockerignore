@@ -1,0 +1,46 @@
+# ============================================
+# Carpetas de compilación
+# ============================================
+bin/
+obj/
+out/
+publish/
+
+# ============================================
+# Archivos de usuario y configuración
+# ============================================
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# ============================================
+# Archivos de Git
+# ============================================
+.git/
+.gitignore
+.gitattributes
+
+# ============================================
+# Archivos de Docker
+# ============================================
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.md
+
+# ============================================
+# Archivos temporales y logs
+# ============================================
+*.log
+*.tmp
+*.cache
+TestResults/
+
+# ============================================
+# Dependencias (se restauran en el build)
+# ============================================
+packages/
+node_modules/
