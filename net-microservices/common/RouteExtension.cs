@@ -9,6 +9,9 @@ public static class RouteExtension
             .Select(Activator.CreateInstance)
             .Cast<IFeatureModule>();
 
+        var authorizedGroup = builder.MapGroup(string.Empty)
+            .RequireAuthorization();
+            
         foreach (var feature in features)
         {
             feature.AddRoutes(builder);
